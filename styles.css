@@ -1,3 +1,6 @@
+:root {
+    --border-style: 3px solid black;
+}
 * {
     box-sizing: border-box;
     margin: 0;
@@ -20,20 +23,41 @@ body {
 .cell {
     width: 100px;
     height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .cell-1, .cell-4, .cell-7 {
-    border-right: 2px solid black;
+    border-right: var(--border-style);
 }
 
 .cell-1, .cell-2, .cell-3 {
-    border-bottom: 2px solid black;
+    border-bottom: var(--border-style);
 }
 
 .cell-3, .cell-6, .cell-9{
-    border-left: 2px solid black;
+    border-left: var(--border-style);
 }
 
 .cell-7, .cell-8, .cell-9{
-    border-top: 2px solid black;
+    border-top: var(--border-style);
+}
+
+.circle {
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    border: 4px solid black;
+    display: inline-block;
+}
+img {
+    width: 70px;
+}
+.filter-1 {
+    filter: invert(89%) sepia(5%) saturate(5502%) hue-rotate(170deg) brightness(91%) contrast(98%);
+}
+
+.filter-2 {
+    filter: invert(52%) sepia(75%) saturate(1850%) hue-rotate(1deg) brightness(100%) contrast(105%);
 }
