@@ -14,13 +14,22 @@ class Board {
 
 
     move(player, position) {
+        if (this.isTaken(position)) {
+            return 'Invalid move'
+        }
         if(player === 'x') {
             this.game_board[position] = 'x'
         } else {
             this.game_board[position] = 'o'
         }
     }
-
+    isTaken(position) {
+        if(this.game_board[position] !== '') {
+            return true
+        } else {
+            return false
+        }
+    }
     checkForWinner(){
         // check rows
         if(this.game_board[0] === 'x' && this.game_board[1] === 'x' && this.game_board[2] === 'x') {
@@ -73,12 +82,30 @@ class Board {
 }
 
 const game = new Board()
+const boardDiv = document.querySelector(".board")
 
+boardDiv.addEventListener('click', addToBoard)
+let player1Turn = true
 
-game.move('o', 0)
-console.log(game.checkForWinner())
-game.move('o', 4)
-console.log(game.checkForWinner())
-game.move('o', 8)
+function addToBoard(event) {
+    const imgTag = document.createElement("img")
+    const position = parseInt(event.target.dataset.position)
 
-console.log(game.checkForWinner())
+    if(!game.isTaken(position)) {
+        if(player1Turn) {
+            imgTag.src = "images/x-mark.svg"
+            imgTag.classList.add("filter-1")
+            game.move('x', position)
+            player1Turn = false
+        } else {
+            imgTag.src = "images/circle.svg"
+            imgTag.classList.add("filter-2")
+            game.move('o', position)
+            player1Turn = true
+        }
+
+        event.target.appendChild(imgTag)
+    }
+    
+}
+
