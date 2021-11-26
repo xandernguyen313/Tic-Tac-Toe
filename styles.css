@@ -1,0 +1,39 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    height: 300;
+}
+
+
+.cell {
+    width: 100px;
+    height: 100px;
+}
+
+.cell-1, .cell-4, .cell-7 {
+    border-right: 2px solid black;
+}
+
+.cell-1, .cell-2, .cell-3 {
+    border-bottom: 2px solid black;
+}
+
+.cell-3, .cell-6, .cell-9{
+    border-left: 2px solid black;
+}
+
+.cell-7, .cell-8, .cell-9{
+    border-top: 2px solid black;
+}
