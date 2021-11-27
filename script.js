@@ -83,6 +83,8 @@ class Board {
 
 const game = new Board()
 const boardDiv = document.querySelector(".board")
+const playerOneDiv = document.querySelector(".playerone")
+const playerTwoDiv = document.querySelector(".playertwo")
 
 boardDiv.addEventListener('click', addToBoard)
 let player1Turn = true
@@ -96,16 +98,27 @@ function addToBoard(event) {
             imgTag.src = "images/x-mark.svg"
             imgTag.classList.add("filter-1")
             game.move('x', position)
+            playerTwoDiv.style.borderColor = "aquamarine"
+            playerOneDiv.style.borderColor = "black"
             player1Turn = false
         } else {
             imgTag.src = "images/circle.svg"
             imgTag.classList.add("filter-2")
             game.move('o', position)
+            playerOneDiv.style.borderColor = "aquamarine"
+            playerTwoDiv.style.borderColor = "black"
             player1Turn = true
         }
 
         event.target.appendChild(imgTag)
     }
-    
+    displayWinner()
 }
 
+function displayWinner() {
+    if (game.checkForWinner() === 'x') {
+        console.log("X is the winner")
+    } else if(game.checkForWinner() === 'o') {
+        console.log("O is the winner")
+    }
+}
