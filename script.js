@@ -9,7 +9,7 @@ class Board {
 
     constructor() {
         this.game_board = ['','','','','','','','','']
-        this.winner;
+        
     }
 
 
@@ -22,6 +22,7 @@ class Board {
         } else {
             this.game_board[position] = 'o'
         }
+        
     }
     isTaken(position) {
         if(this.game_board[position] !== '') {
@@ -31,6 +32,8 @@ class Board {
         }
     }
     checkForWinner(){
+
+
         // check rows
         if(this.game_board[0] === 'x' && this.game_board[1] === 'x' && this.game_board[2] === 'x') {
             return 'x'
@@ -78,6 +81,9 @@ class Board {
             return 'o'
         }
         
+        if(!this.game_board.includes('')) {
+            return 'tie';
+        }
     }
 }
 
@@ -85,6 +91,7 @@ const game = new Board()
 const boardDiv = document.querySelector(".board")
 const playerOneDiv = document.querySelector(".playerone")
 const playerTwoDiv = document.querySelector(".playertwo")
+playerOneDiv.style.borderColor = "aquamarine"
 
 boardDiv.addEventListener('click', addToBoard)
 let player1Turn = true
@@ -120,5 +127,7 @@ function displayWinner() {
         console.log("X is the winner")
     } else if(game.checkForWinner() === 'o') {
         console.log("O is the winner")
+    } else if( game.checkForWinner() === 'tie'){
+        console.log("Tie")
     }
 }
