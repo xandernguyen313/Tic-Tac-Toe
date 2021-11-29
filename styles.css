@@ -41,6 +41,7 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .cell-1, .cell-4, .cell-7 {
@@ -147,7 +148,7 @@ h1 {
     letter-spacing: 2px;
 }
 
-.restart {
+button {
     border: none;
     padding: 10px 20px;
     border-radius: 10px;
@@ -155,8 +156,19 @@ h1 {
     font-size: 20px;
     transition: 100ms linear;
     cursor: pointer;
+    font-family: 'Courier Prime', monospace;
 }
 
-.restart:hover {
-    font-size: 22px;
+
+button:hover {
+    background-color: black;
+    color: white;
+}
+
+
+.game-options {
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }

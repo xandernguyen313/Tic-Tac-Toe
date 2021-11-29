@@ -13,8 +13,9 @@ class Board {
         this.p2WinCount = 0
         this.winpositions
         this.winner
-        this.isPlayer1Turn;
-        this.isPlayer2Turn;
+        this.isPlayer1Turn
+        this.isPlayer2Turn
+        this.gameMode;
     }
 
 
@@ -127,6 +128,14 @@ class Board {
             return -1
         }
     }
+
+    callFunction(event) {
+        if(this.gameMode === "twoplayers") {
+            humanVsHuman(event)
+        } else if(this.gameMode === "easyAI") {
+            humanVsAI(event)
+        }
+    }
 }
 
 const game = new Board()
@@ -136,15 +145,40 @@ const playerTwoDiv = document.querySelector(".playertwo")
 const messageDiv = document.querySelector(".message")
 const all_cell = document.querySelectorAll(".cell")
 const restartBtn = document.querySelector(".restart")
+const playFriendBtn = document.querySelector("#two-players-mode")
+const easyAIBtn = document.querySelector("#easy-mode")
+const hardAIBtn = document.querySelector("#hard-mode")
+const gameOptionsDiv = document.querySelector(".game-options")
 
 function startGame() {
-    game.isPlayer1Turn = true
-    game.isPlayer2Turn = false
-    playerOneDiv.style.borderColor = "aquamarine"
-    boardDiv.addEventListener('click', humanVsHuman)
+
+    playFriendBtn.addEventListener('click', function() {
+        game.gameMode = "twoplayers"
+        game.isPlayer1Turn = true
+        game.isPlayer2Turn = false
+        playerOneDiv.style.borderColor = "aquamarine"
+        boardDiv.addEventListener('click', function(event){
+            game.callFunction(event)
+        })
+        gameOptionsDiv.style.display = "none";
+        boardDiv.classList.remove("hidden")
+    })
+
+    easyAIBtn.addEventListener('click', function() {
+        game.gameMode = "easyAI"
+        game.isPlayer1Turn = true
+        game.isPlayer2Turn = false
+        playerOneDiv.style.borderColor = "aquamarine"
+        boardDiv.addEventListener('click', function(event){
+            game.callFunction(event)
+        })
+        gameOptionsDiv.style.display = "none";
+        boardDiv.classList.remove("hidden")
+    })
+
     restartBtn.addEventListener('click', restart)
- 
 }
+
 function humanVsHuman(event) {
     let imgTag;
     const position = parseInt(event.target.dataset.position)
@@ -198,6 +232,7 @@ function AIPlayer() {
     check()
 }
 function check() {
+    console.log("dsa")
     game.checkPositions()
 
     if (game.winner === 'x') {
@@ -207,13 +242,17 @@ function check() {
         addToScoreBoard(game.winner)
     } else if(game.winner === 'none') {
         changeMessageDiv(game.winner)
-        boardDiv.removeEventListener('click', humanVsHuman)
+        boardDiv.addEventListener('click', function(event){
+            game.callFunction(event)
+        })
         displayMessage()
     }
 }
 
 function addToScoreBoard(winner) {
-    boardDiv.removeEventListener('click', humanVsHuman)
+    boardDiv.addEventListener('click', function(event){
+        game.callFunction(event)
+    })
     if (winner === 'x') {
         game.p1WinCount++
         playerOneDiv.children[1].innerHTML = game.p1WinCount
@@ -227,6 +266,7 @@ function addToScoreBoard(winner) {
     blink()
     setTimeout(displayMessage, 1200)
 }
+
 function changeMessageDiv(winner) {
     if(winner === 'x') {
         messageDiv.querySelector("#x-winner").classList.remove("hidden")
@@ -260,7 +300,7 @@ function displayMessage() {
 function restart() {
     game.resetBoard()
 
-    isPlayer1Turn = true
+    game.isPlayer1Turn= true
     playerOneDiv.style.borderColor = "aquamarine"
     playerTwoDiv.style.borderColor = "black"
     boardDiv.classList.remove("hide")
@@ -270,8 +310,9 @@ function restart() {
         elem.innerHTML = ''
     })
 
-    boardDiv.addEventListener('click', humanVsHuman)
-
+    boardDiv.addEventListener('click', function(event){
+        game.callFunction(event)
+    })
 }
 
 function changeDivColor(color1, color2) {
