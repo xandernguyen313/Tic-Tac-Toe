@@ -32,12 +32,25 @@
             <div class="cell cell-9" data-position="8"></div>
         </div>
         <div class="message">
-            <div>
-            <img src="images/circle.svg" alt="" class="filter-2" id="o">
-            <img src="images/x-mark.svg" alt="" class="filter-1" id="x">
+            <div id="o-winner" class="hidden">
+                <img src="images/circle.svg" alt="" class="filter-2 " id="o">
+                <h1>Winner!</h1>
+            
             </div>
-            <h1>Winner!</h1>
-            <h1>Draw!</h1>
+
+            <div id="x-winner" class="hidden">
+                <img src="images/x-mark.svg" alt="" class="filter-1" id="x">
+                <h1>Winner!</h1>
+            </div>
+
+            <div id="draw" class="hidden"> 
+                <div>
+                    <img src="images/x-mark.svg" alt="" class="filter-1" id="x">
+                    <img src="images/circle.svg" alt="" class="filter-2" id="o"><br>
+                </div>
+                <h1>Draw!</h1>
+            </div>
+            
             <button class="restart">Restart</button>
         </div>
     </div>
