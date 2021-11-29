@@ -43,7 +43,7 @@ class Board {
             this.winner = 'x'
             
         } else if(this.game_board[3] === 'x' && this.game_board[4] === 'x' && this.game_board[5] === 'x') {
-            this.winpositions = [0,3,5]
+            this.winpositions = [3,4,5]
             this.winner = 'x'
 
         } else if(this.game_board[6] === 'x' && this.game_board[7] === 'x' && this.game_board[8] === 'x') {
@@ -55,7 +55,7 @@ class Board {
             this.winpositions = [0,1,2]
             this.winner = 'o'
         } else if(this.game_board[3] === 'o' && this.game_board[4] === 'o' && this.game_board[5] === 'o') {
-            this.winpositions = [0,3,5]
+            this.winpositions = [3,4,5]
             this.winner = 'o'
         } else if(this.game_board[6] === 'o' && this.game_board[7] === 'o' && this.game_board[8] === 'o') {
             this.winpositions = [6,7,8]
@@ -112,6 +112,7 @@ class Board {
     }
     resetBoard() {
         this.game_board = ['','','','','','','','','']
+        this.winner = undefined
     }
 }
 
@@ -121,10 +122,13 @@ const playerOneDiv = document.querySelector(".playerone")
 const playerTwoDiv = document.querySelector(".playertwo")
 const messageDiv = document.querySelector(".message")
 const all_cell = document.querySelectorAll(".cell")
+const restartBtn = document.querySelector(".restart")
 
 playerOneDiv.style.borderColor = "aquamarine"
 
 boardDiv.addEventListener('click', addToBoard)
+restartBtn.addEventListener('click', restart)
+
 let player1Turn = true
 
 function addToBoard(event) {
@@ -157,43 +161,62 @@ function addToBoard(event) {
     } else if(game.winner === 'o') {
         addToScoreBoard(game.winner)
     } else if(game.winner === 'none') {
-
+        messageDiv.querySelectorAll("img")[0].classList.remove("hidden")
+        messageDiv.querySelectorAll("img")[1].classList.remove("hidden")
+        messageDiv.querySelectorAll("h1")[0].classList.add("hidden")
+        messageDiv.querySelectorAll("h1")[1].classList.remove("hidden")
+        boardDiv.removeEventListener('click', addToBoard)
+        displayMessage()
+        
     }
 }
 
 function addToScoreBoard(winner) {
+    boardDiv.removeEventListener('click', addToBoard)
     if (winner === 'x') {
         game.p1WinCount++
         playerOneDiv.children[1].innerHTML = game.p1WinCount
+        messageDiv.querySelectorAll("img")[0].classList.add("hidden")
+        messageDiv.querySelectorAll("img")[1].classList.remove("hidden")
+        messageDiv.querySelectorAll("h1")[0].classList.remove("hidden")
+        messageDiv.querySelectorAll("h1")[1].classList.add("hidden")
     } else if(winner === 'o') {
         game.p2WinCount++
         playerTwoDiv.children[1].innerHTML = game.p2WinCount
+        messageDiv.querySelectorAll("img")[1].classList.add("hidden")
+        messageDiv.querySelectorAll("img")[0].classList.remove("hidden")
+        messageDiv.querySelectorAll("h1")[0].classList.remove("hidden")
+        messageDiv.querySelectorAll("h1")[1].classList.add("hidden")
     }
     blink()
-    setTimeout(displayWinner, 1200)
+    setTimeout(displayMessage, 1200)
 }
 
 function blink() {
     let i = 0
     all_cell.forEach(function(cell){
         if (game.winpositions.includes(i)) {
-            cell.firstChild.setAttribute('id','blink');
+            cell.firstChild.setAttribute('id','blink')
         }
         i++
     })
 }
 
-function displayWinner() {
+function displayMessage() {
     boardDiv.classList.add("hide")
     messageDiv.classList.add("show")
-
 }
-function clearBoard() {
+
+function restart() {
     game.resetBoard()
     player1Turn = true
     playerOneDiv.style.borderColor = "aquamarine"
     playerTwoDiv.style.borderColor = "black"
+    boardDiv.classList.remove("hide")
+    messageDiv.classList.remove("show")
     all_cell.forEach(function(elem){
         elem.innerHTML = ''
     })
+    boardDiv.addEventListener('click', addToBoard)
+
 }

@@ -19,21 +19,27 @@
             <p>0</p>
         </div>
     </div>
-    <div class="board">
-        <div class="cell cell-1" data-position="0"></div>
-        <div class="cell cell-2" data-position="1"></div>
-        <div class="cell cell-3" data-position="2"></div>
-        <div class="cell cell-4" data-position="3"></div>
-        <div class="cell cell-5" data-position="4"></div>
-        <div class="cell cell-6" data-position="5"></div>
-        <div class="cell cell-7" data-position="6"></div>
-        <div class="cell cell-8" data-position="7"></div>
-        <div class="cell cell-9" data-position="8"></div>
-    </div>
-    <div class="message">
-        <img src="images/circle.svg" alt="" class="filter-2 hidden">
-        <img src="images/x-mark.svg" alt="" class="filter-1">
-        <h1>Winner!</h1>
+    <div id="container">
+        <div class="board">
+            <div class="cell cell-1" data-position="0"></div>
+            <div class="cell cell-2" data-position="1"></div>
+            <div class="cell cell-3" data-position="2"></div>
+            <div class="cell cell-4" data-position="3"></div>
+            <div class="cell cell-5" data-position="4"></div>
+            <div class="cell cell-6" data-position="5"></div>
+            <div class="cell cell-7" data-position="6"></div>
+            <div class="cell cell-8" data-position="7"></div>
+            <div class="cell cell-9" data-position="8"></div>
+        </div>
+        <div class="message">
+            <div>
+            <img src="images/circle.svg" alt="" class="filter-2" id="o">
+            <img src="images/x-mark.svg" alt="" class="filter-1" id="x">
+            </div>
+            <h1>Winner!</h1>
+            <h1>Draw!</h1>
+            <button class="restart">Restart</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
