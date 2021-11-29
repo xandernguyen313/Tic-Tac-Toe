@@ -102,7 +102,7 @@ class Board {
             this.winner = 'o'
         }
         
-        if(!this.game_board.includes('')) {
+        if(!this.game_board.includes('') && !this.winner) {
             this.winner = 'none';
         }
     }
@@ -117,10 +117,14 @@ class Board {
 
     easyAI()  {
         let randomInt;
-        do {
-            randomInt = Math.floor(Math.random() * 9)
-        } while(this.game_board[randomInt] !== '')
-        return randomInt
+        if (this.game_board.includes('')) {
+            do {
+                randomInt = Math.floor(Math.random() * 9)
+            } while(this.game_board[randomInt] !== '')
+            return randomInt
+        } else {
+            return -1
+        }
     }
 }
 
@@ -136,11 +140,11 @@ let player1Turn;
 function startGame() {
     player1Turn = true
     playerOneDiv.style.borderColor = "aquamarine"
-    boardDiv.addEventListener('click', addToBoard)
+    boardDiv.addEventListener('click', humanVsAI)
     restartBtn.addEventListener('click', restart)
  
 }
-function addToBoard(event) {
+function humanVsHuman(event) {
     const imgTag = document.createElement("img")
     const position = parseInt(event.target.dataset.position)
     if(!game.isTaken(position)) {
@@ -159,11 +163,53 @@ function addToBoard(event) {
             playerTwoDiv.style.borderColor = "black"
             player1Turn = true
         }
-
         event.target.appendChild(imgTag)
+
+        check()
     }
 
+}
+
+function humanVsAI(event) {
+    const imgTag = document.createElement("img")
+    const position = parseInt(event.target.dataset.position)
+    if(!game.isTaken(position)) {
+        if(player1Turn) {
+            imgTag.src = "images/x-mark.svg"
+            imgTag.classList.add("filter-1")
+            game.move('x', position)
+            playerTwoDiv.style.borderColor = "aquamarine"
+            playerOneDiv.style.borderColor = "black"
+            player1Turn = false
+            event.target.appendChild(imgTag)
+        }
+    }
     game.checkForWinner()
+    if (game.winner === 'x') {
+        check()
+    } else {
+        setTimeout(function() {
+            AIPlayer(event)
+        }, 400)
+    }
+}
+function AIPlayer() {
+    const position = game.easyAI()
+    if (position !== -1) {
+        const imgTag = document.createElement("img")
+        imgTag.src = "images/circle.svg"
+        imgTag.classList.add("filter-2")
+        game.move('o', position)
+        playerOneDiv.style.borderColor = "aquamarine"
+        playerTwoDiv.style.borderColor = "black"
+        player1Turn = true
+        boardDiv.children[position].appendChild(imgTag)
+    }
+    check()
+}
+function check() {
+    game.checkForWinner()
+
     if (game.winner === 'x') {
         addToScoreBoard(game.winner)
     } else if(game.winner === 'o') {
@@ -173,13 +219,13 @@ function addToBoard(event) {
         messageDiv.querySelectorAll("img")[1].classList.remove("hidden")
         messageDiv.querySelectorAll("h1")[0].classList.add("hidden")
         messageDiv.querySelectorAll("h1")[1].classList.remove("hidden")
-        boardDiv.removeEventListener('click', addToBoard)
+        boardDiv.removeEventListener('click', humanVsAI)
         displayMessage()
     }
 }
 
 function addToScoreBoard(winner) {
-    boardDiv.removeEventListener('click', addToBoard)
+    boardDiv.removeEventListener('click', humanVsAI)
     if (winner === 'x') {
         game.p1WinCount++
         playerOneDiv.children[1].innerHTML = game.p1WinCount
@@ -227,8 +273,10 @@ function restart() {
         elem.innerHTML = ''
     })
 
-    boardDiv.addEventListener('click', addToBoard)
+    boardDiv.addEventListener('click', humanVsAI)
 
 }
+
+
 
 startGame()
