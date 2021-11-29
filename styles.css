@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+
 :root {
     --border-style: 3px solid black;
 }
@@ -11,6 +13,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
+    font-family: 'Courier Prime', monospace;
 }
 #container {
     position: relative;
@@ -141,6 +144,7 @@ h1 {
 }
 .message h1 {
     font-size: 60px;
+    letter-spacing: 2px;
 }
 
 .restart {

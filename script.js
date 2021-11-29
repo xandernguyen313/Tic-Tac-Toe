@@ -114,6 +114,14 @@ class Board {
         this.game_board = ['','','','','','','','','']
         this.winner = undefined
     }
+
+    easyAI()  {
+        let randomInt;
+        do {
+            randomInt = Math.floor(Math.random() * 9)
+        } while(this.game_board[randomInt] !== '')
+        return randomInt
+    }
 }
 
 const game = new Board()
@@ -123,14 +131,15 @@ const playerTwoDiv = document.querySelector(".playertwo")
 const messageDiv = document.querySelector(".message")
 const all_cell = document.querySelectorAll(".cell")
 const restartBtn = document.querySelector(".restart")
+let player1Turn;
 
-playerOneDiv.style.borderColor = "aquamarine"
-
-boardDiv.addEventListener('click', addToBoard)
-restartBtn.addEventListener('click', restart)
-
-let player1Turn = true
-
+function startGame() {
+    player1Turn = true
+    playerOneDiv.style.borderColor = "aquamarine"
+    boardDiv.addEventListener('click', addToBoard)
+    restartBtn.addEventListener('click', restart)
+ 
+}
 function addToBoard(event) {
     const imgTag = document.createElement("img")
     const position = parseInt(event.target.dataset.position)
@@ -149,7 +158,6 @@ function addToBoard(event) {
             playerOneDiv.style.borderColor = "aquamarine"
             playerTwoDiv.style.borderColor = "black"
             player1Turn = true
-            document.querySelector(".message").classList.remove("show")
         }
 
         event.target.appendChild(imgTag)
@@ -167,7 +175,6 @@ function addToBoard(event) {
         messageDiv.querySelectorAll("h1")[1].classList.remove("hidden")
         boardDiv.removeEventListener('click', addToBoard)
         displayMessage()
-        
     }
 }
 
@@ -209,14 +216,19 @@ function displayMessage() {
 
 function restart() {
     game.resetBoard()
+
     player1Turn = true
     playerOneDiv.style.borderColor = "aquamarine"
     playerTwoDiv.style.borderColor = "black"
     boardDiv.classList.remove("hide")
     messageDiv.classList.remove("show")
+
     all_cell.forEach(function(elem){
         elem.innerHTML = ''
     })
+
     boardDiv.addEventListener('click', addToBoard)
 
 }
+
+startGame()
