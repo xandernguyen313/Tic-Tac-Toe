@@ -112,7 +112,7 @@ h1 {
 }
 
 
-.message {
+.result {
     text-align: center;
     text-transform: uppercase;
     position: absolute;
@@ -123,7 +123,7 @@ h1 {
     transition: opacity 800ms ease-in;
 }
 
-.message.show {
+.result.show {
     visibility: visible;
     opacity: 1;
     transition-delay: 200ms;
@@ -137,13 +137,13 @@ h1 {
     justify-content: center;
     align-items: center;
 }
-.message #o {
+.result #o {
     width: 100px;
 }
-.message #x{
+.result #x{
     width: 140px;
 }
-.message h1 {
+.result h1 {
     font-size: 60px;
     letter-spacing: 2px;
 }

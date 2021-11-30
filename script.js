@@ -9,20 +9,16 @@ class Board {
 
     constructor() {
         this.game_board = ['','','','','','','','','']
-        this.p1WinCount = 0
-        this.p2WinCount = 0
+        this.xWinCount = 0
+        this.oWinCount = 0
         this.winpositions
         this.winner
-        this.isPlayer1Turn
-        this.isPlayer2Turn
-        this.gameMode;
+        this.isXTurn
+        this.isOTurn
     }
 
-
+    // Place x or o into array position
     move(player, position) {
-        if (this.isTaken(position)) {
-            return 'Invalid move'
-        }
         if(player === 'x') {
             this.game_board[position] = 'x'
         } else {
@@ -30,6 +26,7 @@ class Board {
         }
         
     }
+    //Check if the spot is taken
     isTaken(position) {
         if(this.game_board[position] !== '') {
             return true
@@ -37,8 +34,10 @@ class Board {
             return false
         }
     }
-    checkPositions(){
 
+    // Check for winner or tie
+    checkPositions(){
+        this.winner = null
         // check rows
         if(this.game_board[0] === 'x' && this.game_board[1] === 'x' && this.game_board[2] === 'x') {
             this.winpositions = [0,1,2]
@@ -104,21 +103,22 @@ class Board {
             this.winner = 'o'
         }
         
-        if(!this.game_board.includes('') && !this.winner) {
+        if(!this.game_board.includes('') && this.winner == null) {
             this.winner = 'none';
         }
     }
     
-    getWinner() {
-        return this.winner;
-    }
+    // Set array to empty and set winner to null
     resetBoard() {
         this.game_board = ['','','','','','','','','']
         this.winner = undefined
     }
 
+    // Return a random integer for computer turn
+    // Return -1 if the array is full
     easyAI()  {
         let randomInt;
+        // check if board has available spots left
         if (this.game_board.includes('')) {
             do {
                 randomInt = Math.floor(Math.random() * 9)
@@ -129,20 +129,13 @@ class Board {
         }
     }
 
-    callFunction(event) {
-        if(this.gameMode === "twoplayers") {
-            humanVsHuman(event)
-        } else if(this.gameMode === "easyAI") {
-            humanVsAI(event)
-        }
-    }
 }
 
 const game = new Board()
 const boardDiv = document.querySelector(".board")
 const playerOneDiv = document.querySelector(".playerone")
 const playerTwoDiv = document.querySelector(".playertwo")
-const messageDiv = document.querySelector(".message")
+const resultDiv = document.querySelector(".result")
 const all_cell = document.querySelectorAll(".cell")
 const restartBtn = document.querySelector(".restart")
 const playFriendBtn = document.querySelector("#two-players-mode")
@@ -150,169 +143,195 @@ const easyAIBtn = document.querySelector("#easy-mode")
 const hardAIBtn = document.querySelector("#hard-mode")
 const gameOptionsDiv = document.querySelector(".game-options")
 
+
+
 function startGame() {
+    // Listen for user's choice
 
+    // Button 1: Play with Friend
     playFriendBtn.addEventListener('click', function() {
-        game.gameMode = "twoplayers"
-        game.isPlayer1Turn = true
-        game.isPlayer2Turn = false
+        game.isXTurn = true
+        game.isOTurn = false
         playerOneDiv.style.borderColor = "aquamarine"
-        boardDiv.addEventListener('click', function(event){
-            game.callFunction(event)
-        })
+        boardDiv.addEventListener('click', humanVsHuman)
         gameOptionsDiv.style.display = "none";
         boardDiv.classList.remove("hidden")
     })
 
+    // Button 2: Play against an Easy AI 
     easyAIBtn.addEventListener('click', function() {
-        game.gameMode = "easyAI"
-        game.isPlayer1Turn = true
-        game.isPlayer2Turn = false
+        game.isXTurn = true
+        game.isOTurn = false
         playerOneDiv.style.borderColor = "aquamarine"
-        boardDiv.addEventListener('click', function(event){
-            game.callFunction(event)
-        })
+        boardDiv.addEventListener('click', humanVsEasyAI)
         gameOptionsDiv.style.display = "none";
         boardDiv.classList.remove("hidden")
     })
 
+    // Button 3: Play against a Hard AI 
+    hardAIBtn.addEventListener('click', function() {
+        game.isXTurn = true
+        game.isOTurn = false
+        playerOneDiv.style.borderColor = "aquamarine"
+        boardDiv.addEventListener('click', humanVsHardAI)
+        gameOptionsDiv.style.display = "none";
+        boardDiv.classList.remove("hidden")
+    })
+
+    // Listen when user clicks the Restart Button
     restartBtn.addEventListener('click', restart)
 }
 
+// "Play with Friend"
+// Listen for user's click and switch turn
+// 'X' for player 1, 'O' for player 2
 function humanVsHuman(event) {
-    let imgTag;
     const position = parseInt(event.target.dataset.position)
     if(!game.isTaken(position)) {
-        if(game.isPlayer1Turn) {
-            imgTag = createImgTag("images/x-mark.svg", "filter-1")
-            game.move('x', position)
-            changeDivColor("black", "aquamarine")
-            game.isPlayer1Turn = false
-        } else {
-            imgTag = createImgTag("images/circle.svg", "filter-2")
-            game.move('o', position)
-            changeDivColor("aquamarine", "black")
-            game.isPlayer1Turn = true
-        }
-        event.target.appendChild(imgTag)
+        if(game.isXTurn) {
+            xTurn(position)
 
+        } else if(game.isOTurn) {
+            oTurn(position)
+        }
+    
         check()
     }
 
 }
 
-function humanVsAI(event) {
-    let imgTag;
+// "Easy AI"
+// 'X' for human, 'O' for computer
+// Listen for user's click and switch turn
+function humanVsEasyAI(event) {
     const position = parseInt(event.target.dataset.position)
     if(!game.isTaken(position)) {
-        if(game.isPlayer1Turn) {
-            imgTag = createImgTag("images/x-mark.svg", "filter-1")
-            game.move('x', position)
-            changeDivColor("black", "aquamarine")
-            game.isPlayer2Turn = true
-            event.target.appendChild(imgTag)
+        if(game.isXTurn) {
+            xTurn(position)
             check()
         }
-        if(game.isPlayer2Turn) {
+        if(game.isOTurn) {
             setTimeout(function() {
-                AIPlayer(event)
+                EasyAI()
             }, 400)
         }
     }
 }
-function AIPlayer() {
+
+// Easy AI Logic
+// Place 'O' in a random spot
+function EasyAI() {
     const position = game.easyAI()
     if (position !== -1) {
-        const imgTag = createImgTag("images/circle.svg", "filter-2")
-        game.move('o', position)
-        changeDivColor("aquamarine", "black")
-        game.isPlayer1Turn = true
-        boardDiv.children[position].appendChild(imgTag)
+        oTurn(position)
     }
     check()
 }
-function check() {
-    console.log("dsa")
-    game.checkPositions()
 
-    if (game.winner === 'x') {
-        game.isPlayer2Turn = false
-        addToScoreBoard(game.winner)
-    } else if(game.winner === 'o') {
-        addToScoreBoard(game.winner)
-    } else if(game.winner === 'none') {
-        changeMessageDiv(game.winner)
-        boardDiv.addEventListener('click', function(event){
-            game.callFunction(event)
-        })
-        displayMessage()
-    }
-}
-
-function addToScoreBoard(winner) {
-    boardDiv.addEventListener('click', function(event){
-        game.callFunction(event)
-    })
-    if (winner === 'x') {
-        game.p1WinCount++
-        playerOneDiv.children[1].innerHTML = game.p1WinCount
-        changeMessageDiv(winner)
-
-    } else if(winner === 'o') {
-        game.p2WinCount++
-        playerTwoDiv.children[1].innerHTML = game.p2WinCount
-        changeMessageDiv(winner)
-    }
-    blink()
-    setTimeout(displayMessage, 1200)
-}
-
-function changeMessageDiv(winner) {
-    if(winner === 'x') {
-        messageDiv.querySelector("#x-winner").classList.remove("hidden")
-        messageDiv.querySelector("#o-winner").classList.add("hidden")
-        messageDiv.querySelector("#draw").classList.add("hidden")
-    } else if (winner === 'o') {
-        messageDiv.querySelector("#o-winner").classList.remove("hidden")
-        messageDiv.querySelector("#x-winner").classList.add("hidden")
-        messageDiv.querySelector("#draw").classList.add("hidden")
-    } else {
-        messageDiv.querySelector("#draw").classList.remove("hidden")
-        messageDiv.querySelector("#o-winner").classList.add("hidden")
-        messageDiv.querySelector("#x-winner").classList.add("hidden")
-    }
-}
-function blink() {
-    let i = 0
-    all_cell.forEach(function(cell){
-        if (game.winpositions.includes(i)) {
-            cell.firstChild.setAttribute('id','blink')
+// "Hard AI"
+// 'X' for human, 'O' for computer
+// Listen for user's click and switch turn
+function humanVsHardAI(event) {
+    const position = parseInt(event.target.dataset.position)
+    if(!game.isTaken(position)) {
+        if(game.isXTurn) {
+            xTurn(position)
+            check()
         }
-        i++
-    })
+        if(game.isOTurn) {
+            setTimeout(function() {
+                HardAI()
+            }, 400)
+        }
+    }
 }
 
-function displayMessage() {
-    boardDiv.classList.add("hide")
-    messageDiv.classList.add("show")
+
+// Hard AI Logic
+// Use the Minimax Algorithm
+function HardAI(){
+    let bestScore = -Infinity
+    let position
+    let board = game.game_board
+    for(let i = 0; i < 9; i++) {
+        if (board[i] == '') {
+            board[i] = 'o'
+            let score = minimax(board, false)
+            board[i] = ''
+            if(score > bestScore) {
+                bestScore = score
+                position = i
+            }
+        }
+    }
+    if(position !== undefined) {
+        oTurn(position)
+        check()
+    }
 }
 
-function restart() {
-    game.resetBoard()
+// Recursive function
+// Find the best case scenerio for the computer
+function minimax(board, isMaximizing){
 
-    game.isPlayer1Turn= true
-    playerOneDiv.style.borderColor = "aquamarine"
-    playerTwoDiv.style.borderColor = "black"
-    boardDiv.classList.remove("hide")
-    messageDiv.classList.remove("show")
+    game.checkPositions()
+    let result = game.winner
 
-    all_cell.forEach(function(elem){
-        elem.innerHTML = ''
-    })
+    // Base Case
+    if(result == 'x') {
+        return -1
+    } else if(result == 'o') {
+        return 1
+    } else if(result == 'none') {
+        return 0
+    }
 
-    boardDiv.addEventListener('click', function(event){
-        game.callFunction(event)
-    })
+    
+    if (isMaximizing) {
+        let bestScore = -Infinity
+        for(let i = 0; i < 9; i++) {
+            if (board[i] == '') {
+                board[i] = 'o'         
+                let score = minimax(board, false)
+                board[i] = ''
+                bestScore = Math.max(score, bestScore)
+            }
+        }
+
+        return bestScore
+        
+    } else {
+        let bestScore = Infinity
+        for(let i = 0; i < 9; i++) {
+            if (board[i] == '') {
+                board[i] = 'x'
+                let score = minimax(board, true)
+                board[i] = ''
+                bestScore = Math.min(score, bestScore)
+            }
+        }
+        return bestScore
+    }
+    
+}
+
+function xTurn(position) {
+    imgTag = createImgTag("images/x-mark.svg", "filter-1")
+    game.move('x', position)
+    changeDivColor("black", "aquamarine")
+    game.isXTurn = false
+    game.isOTurn = true
+    boardDiv.children[position].appendChild(imgTag)
+
+}
+
+function oTurn(position) {
+    const imgTag = createImgTag("images/circle.svg", "filter-2")
+    game.move('o', position)
+    changeDivColor("aquamarine", "black")
+    game.isXTurn = true
+    game.isOTurn = false
+    boardDiv.children[position].appendChild(imgTag)
 }
 
 function changeDivColor(color1, color2) {
@@ -326,5 +345,80 @@ function createImgTag(img_url, filter) {
     return imgTag
 }
 
+function check() {
+    game.checkPositions()
+    if (game.winner === 'x') {
+        game.isOTurn = false
+        addToScoreBoard(game.winner)
+    } else if(game.winner === 'o') {
+        addToScoreBoard(game.winner)
+    } else if(game.winner === 'none') {
+        displayResult(game.winner)
+        displayMessage()
+    }
+}
+
+function addToScoreBoard(winner) {
+    
+    if (winner === 'x') {
+        game.xWinCount++
+        playerOneDiv.children[1].innerHTML = game.xWinCount
+        displayResult(winner)
+    } else if(winner === 'o') {
+        game.oWinCount++
+        playerTwoDiv.children[1].innerHTML = game.oWinCount
+        displayResult(winner)
+    }
+    blink()
+    setTimeout(displayMessage, 1200)
+}
+
+function displayResult(winner) {
+    if(winner === 'x') {
+        resultDiv.querySelector("#x-winner").classList.remove("hidden")
+        resultDiv.querySelector("#o-winner").classList.add("hidden")
+        resultDiv.querySelector("#draw").classList.add("hidden")
+    } else if (winner === 'o') {
+        resultDiv.querySelector("#o-winner").classList.remove("hidden")
+        resultDiv.querySelector("#x-winner").classList.add("hidden")
+        resultDiv.querySelector("#draw").classList.add("hidden")
+    } else {
+        resultDiv.querySelector("#draw").classList.remove("hidden")
+        resultDiv.querySelector("#o-winner").classList.add("hidden")
+        resultDiv.querySelector("#x-winner").classList.add("hidden")
+    }
+}
+
+function blink() {
+    let i = 0
+    all_cell.forEach(function(cell){
+        if (game.winpositions.includes(i)) {
+            cell.firstChild.setAttribute('id','blink')
+        }
+        i++
+    })
+}
+
+function displayMessage() {
+    boardDiv.classList.add("hide")
+    resultDiv.classList.add("show")
+}
+
+function restart() {
+    game.resetBoard()
+
+    game.isXTurn= true
+    playerOneDiv.style.borderColor = "aquamarine"
+    playerTwoDiv.style.borderColor = "black"
+    boardDiv.classList.remove("hide")
+    resultDiv.classList.remove("show")
+
+    all_cell.forEach(function(elem){
+        elem.innerHTML = ''
+    })
+
+}
+
 
 startGame()
+
