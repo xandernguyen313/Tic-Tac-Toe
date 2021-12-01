@@ -41,3 +41,11 @@ Main objective: Solidify knowledge of HTML, CSS and JavaScript by re-creating a 
 - Git
 - Google Chrome Developer tools
 
+## User Interface:
+![game-1](https://user-images.githubusercontent.com/54870248/144271184-912ae249-2165-41b4-bedc-90ed3b4c6228.JPG)
+![game-2](https://user-images.githubusercontent.com/54870248/144271205-c4879583-6a7b-4326-92f7-169c682bfb79.JPG)
+![o-win](https://user-images.githubusercontent.com/54870248/144271226-2b2b13d2-1d26-4603-ba8c-c542435a5522.JPG)
+![game-3](https://user-images.githubusercontent.com/54870248/144271237-9ff6b10e-6ed7-4c51-8445-80171762e864.JPG)
+
+
+
