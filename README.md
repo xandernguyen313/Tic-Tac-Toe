@@ -1,10 +1,10 @@
-Project - Tic Tac Toe Game
+# Project - Tic Tac Toe Game
 
 Developer: Xander Nguyen
 
 Main objective: Solidify knowledge of HTML, CSS and JavaScript by re-creating a Tic-Tac-Toe game
 
-User stories:
+## User stories:
 
 - As a user, I should be able to start a new game
 - As a user, I should be able to select where to place my Xs or Os
@@ -15,7 +15,7 @@ User stories:
 - As a user, I should be able to play the game again without refreshing my page
 - As a user, I should be able to choose whether I want to play against a friend or a computer
 
-MVP:
+## MVP:
 
 - Render a game board in the browser
 - Use JavaScript to listen for user's click and manipulate HTML elements
@@ -23,7 +23,7 @@ MVP:
 - Switch turns between X and O
 - Include seperate HTML/CSS/Javascript files
 
-Bonus:
+## Bonus:
 
 - Create a scoreboard to keep track of multiple rounds
 - Create an AI opponent
@@ -31,10 +31,13 @@ Bonus:
 - Add animation to the game
 
 
-Technologies:
+## Technologies:
 
 - Visual Studio Code
 - Git
 - Google Chrome Developer tools
 
+## Wireframe:
+
+![tictactoe-wireframe](https://user-images.githubusercontent.com/54870248/144269870-cf9fc63f-b4a5-4b70-bf0d-58f52e5d2774.JPG)
 
