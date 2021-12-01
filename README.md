@@ -1,5 +1,7 @@
 Project - Tic Tac Toe Game
+
 Developer: Xander Nguyen
+
 Main objective: Solidify knowledge of HTML, CSS and JavaScript by re-creating a Tic-Tac-Toe game
 
 User stories:
