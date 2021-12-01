@@ -4,6 +4,10 @@ Developer: Xander Nguyen
 
 Main objective: Solidify knowledge of HTML, CSS and JavaScript by re-creating a Tic-Tac-Toe game
 
+## Wireframe:
+
+![tictactoe-wireframe](https://user-images.githubusercontent.com/54870248/144269870-cf9fc63f-b4a5-4b70-bf0d-58f52e5d2774.JPG)
+
 ## User stories:
 
 - As a user, I should be able to start a new game
@@ -36,8 +40,4 @@ Main objective: Solidify knowledge of HTML, CSS and JavaScript by re-creating a 
 - Visual Studio Code
 - Git
 - Google Chrome Developer tools
-
-## Wireframe:
-
-![tictactoe-wireframe](https://user-images.githubusercontent.com/54870248/144269870-cf9fc63f-b4a5-4b70-bf0d-58f52e5d2774.JPG)
 
