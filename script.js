@@ -256,13 +256,14 @@ function HardAI(){
     for(let i = 0; i < 9; i++) {
         if (board[i] == '') {
             board[i] = 'o'
-            let score = minimax(board, false)
+            let score = minimax(board, false)       
             board[i] = ''
             if(score > bestScore) {
                 bestScore = score
                 position = i
             }
         }
+
     }
     if(position !== undefined) {
         oTurn(position)
@@ -286,12 +287,13 @@ function minimax(board, isMaximizing){
         return 0
     }
 
-    
+    // Maximizing its score
+    // Will choose a move with a score of +1
     if (isMaximizing) {
         let bestScore = -Infinity
         for(let i = 0; i < 9; i++) {
             if (board[i] == '') {
-                board[i] = 'o'         
+                board[i] = 'o'    
                 let score = minimax(board, false)
                 board[i] = ''
                 bestScore = Math.max(score, bestScore)
@@ -299,7 +301,9 @@ function minimax(board, isMaximizing){
         }
 
         return bestScore
-        
+
+    // Minimizing the computer's ultimate score
+    // Will choose a move with a score of -1
     } else {
         let bestScore = Infinity
         for(let i = 0; i < 9; i++) {
@@ -315,6 +319,7 @@ function minimax(board, isMaximizing){
     
 }
 
+// Creates an image tag for X and append it to the targeted div in board
 function xTurn(position) {
     imgTag = createImgTag("images/x-mark.svg", "filter-1")
     game.move('x', position)
@@ -325,6 +330,7 @@ function xTurn(position) {
 
 }
 
+// Creates an image tag for O and append it to the targeted div in board
 function oTurn(position) {
     const imgTag = createImgTag("images/circle.svg", "filter-2")
     game.move('o', position)
@@ -333,18 +339,22 @@ function oTurn(position) {
     game.isOTurn = false
     boardDiv.children[position].appendChild(imgTag)
 }
-
-function changeDivColor(color1, color2) {
-    playerOneDiv.style.borderColor = color1
-    playerTwoDiv.style.borderColor = color2
-}
 function createImgTag(img_url, filter) {
-    const imgTag = document.createElement("img")
+    const imgTag = document.createElement("img") 
     imgTag.src = img_url
     imgTag.classList.add(filter)
     return imgTag
 }
 
+// Change border color based on the current player's turn
+function changeDivColor(color1, color2) {
+    playerOneDiv.style.borderColor = color1
+    playerTwoDiv.style.borderColor = color2
+}
+
+
+// Check for winner 
+// and call the appropriate function depending on the result
 function check() {
     game.checkPositions()
     if (game.winner === 'x') {
@@ -358,6 +368,8 @@ function check() {
     }
 }
 
+// Increment the player win counts and change the HTML
+// to reflect that number
 function addToScoreBoard(winner) {
     
     if (winner === 'x') {
@@ -373,6 +385,7 @@ function addToScoreBoard(winner) {
     setTimeout(displayMessage, 1200)
 }
 
+// Toggle certain classes to display the result of the game
 function displayResult(winner) {
     if(winner === 'x') {
         resultDiv.querySelector("#x-winner").classList.remove("hidden")
@@ -389,6 +402,9 @@ function displayResult(winner) {
     }
 }
 
+// Loop through all existing positions of Xs and Os
+// and add blinking animation to the winning
+// positions of Xs or Os
 function blink() {
     let i = 0
     all_cell.forEach(function(cell){
@@ -398,12 +414,13 @@ function blink() {
         i++
     })
 }
-
+// Hide the board and display the result
 function displayMessage() {
     boardDiv.classList.add("hide")
     resultDiv.classList.add("show")
 }
 
+// Reset board and clear out all the cells
 function restart() {
     game.resetBoard()
 
